@@ -20,7 +20,7 @@
     width: 100%; height: 100%;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.35;
+    opacity: 0.75;
   }
 
   .hero, section, .quote-wrap, .form-section, footer {
@@ -224,7 +224,7 @@
   }
   .form-sub {
     font-size: 13px;
-    color: #555;
+    color: #888;
     margin-bottom: 60px;
     font-family: 'Courier New', monospace;
     letter-spacing: 2px;
@@ -247,44 +247,45 @@
 
   .q-num {
     font-family: 'Courier New', monospace;
-    font-size: 11px;
-    color: #6a60c0;
+    font-size: 12px;
+    color: #9b8fff;
     letter-spacing: 3px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     text-transform: uppercase;
   }
 
   .q-text {
-    font-size: clamp(18px, 2.4vw, 21px);
-    color: #f0f0f0;
-    margin-bottom: 10px;
+    font-size: clamp(20px, 2.8vw, 26px);
+    color: #ffffff;
+    margin-bottom: 12px;
     line-height: 1.45;
+    font-weight: 400;
   }
 
   .q-hint {
-    font-size: 14px;
-    color: #666;
+    font-size: 16px;
+    color: #999;
     font-style: italic;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     line-height: 1.65;
   }
 
   .q-input {
     width: 100%;
-    background: rgba(20,20,32,0.9);
-    border: 1px solid #2e2e48;
+    background: rgba(22,22,38,0.95);
+    border: 1px solid #3e3e62;
     border-radius: 7px;
-    color: #e0e0e0;
+    color: #f0f0f0;
     font-family: 'Georgia', serif;
-    font-size: 16px;
-    padding: 16px 18px;
+    font-size: 17px;
+    padding: 18px 20px;
     outline: none;
     transition: border-color 0.2s;
     resize: vertical;
     line-height: 1.65;
   }
-  .q-input:focus { border-color: #7c6ff7; background: rgba(25,22,45,0.95); }
-  .q-input::placeholder { color: #3a3a58; font-style: italic; }
+  .q-input:focus { border-color: #9b8fff; background: rgba(28,24,50,0.98); }
+  .q-input::placeholder { color: #5a5a82; font-style: italic; }
 
   .checkboxes { display: flex; flex-direction: column; gap: 9px; }
 
@@ -293,16 +294,16 @@
     align-items: center;
     gap: 14px;
     cursor: pointer;
-    font-size: 16px;
-    color: #aaa;
-    padding: 14px 18px;
-    border: 1px solid #222230;
+    font-size: 17px;
+    color: #d0d0d0;
+    padding: 15px 20px;
+    border: 1px solid #2e2e50;
     border-radius: 7px;
     transition: all 0.15s;
     line-height: 1.4;
-    background: rgba(18,18,28,0.6);
+    background: rgba(20,20,35,0.75);
   }
-  .checkbox-label:hover { border-color: #4a4870; color: #ddd; background: rgba(25,22,45,0.7); }
+  .checkbox-label:hover { border-color: #6a60c0; color: #fff; background: rgba(28,25,50,0.85); }
 
   .checkbox-label input[type="checkbox"] {
     appearance: none;
@@ -317,9 +318,36 @@
     transition: all 0.15s;
   }
   .checkbox-label input[type="checkbox"]:checked { background: #7c6ff7; border-color: #7c6ff7; }
-  .checkbox-label input[type="checkbox"]:checked::after {
-    content: '✓';
-    position: absolute;
+  .checkbox-label input[type="checkbox"]:checked::after { content: '✓'; position: absolute; color: white; font-size: 12px; font-family: Arial, sans-serif; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .checkbox-label:has(input:checked) { border-color: #5a50b060; color: #e0e0e0; background: rgba(30,25,55,0.7); }
+
+  footer {
+    padding: 52px 32px;
+    text-align: center;
+    border-top: 1px solid #1a1a28;
+    background: rgba(10,10,16,0.9);
+  }
+  .footer-text {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #333;
+    letter-spacing: 4px;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    section { padding: 64px 20px; }
+    .quote-wrap { padding: 56px 20px; }
+    .quote-block { padding: 28px 24px; }
+    .form-section { padding: 64px 20px 90px; }
+    h1 { letter-spacing: -1px; }
+    .cases-grid { grid-template-columns: 1fr; gap: 12px; }
+    .step { gap: 18px; }
+    .q-input { font-size: 16px; }
+    .checkbox-label { font-size: 15px; padding: 13px 14px; }
+  }
+</style>
+</head>absolute;
     color: white;
     font-size: 12px;
     font-family: Arial, sans-serif;
@@ -364,7 +392,7 @@
   <div class="label">закрытая сеть · коллективный разум</div>
   <h1>ГРАФ</h1>
   <p class="tagline">
-    База знаний из <strong>людей�, кейсов и возможностейк</strong> —
+    База знаний из <strong>людей, кейсов и возможностей</strong> —
     связанных так, чтобы видеть то, чего не видно в обычном нетворкинге.
   </p>
   <div class="scroll-hint">↓ читать дальше</div>
@@ -377,13 +405,13 @@
   <span class="section-label">01 — Идея</span>
   <h2>ГРАФ — это не список контактов.<br>Это <em>коллективный разум</em>.</h2>
   <p>
-    Мы собираем профили людей из разных сфер — <strong>инвесторов, владельцев бизнеса, топ-менеджеров, экспертов</strong> — и связываем их через ресурсы, запросыи �цAли.
+    Мы собираем профили людей из разных сфер — <strong>инвесторов, владельцев бизнеса, топ-менеджеров, экспертов</strong> — и связываем их через ресурсы, запросы и цели.
   </p>
   <p>
-     через время граф начинает показывать <strong>неочевидные связи</strong>: кто кому нужен, где есть незакрытая потребность, какая синергия возможна между людьми, которые никогда не встречались.
+    Через время граф начинает показывать <strong>неочевидные связи</strong>: кто кому нужен, где есть незакрытая потребность, какая синергия возможна между людьми, которые никогда не встречались.
   </p>
   <p>
-    В основе — <strong>сотникейсы по внедрению AI и автоматизации</strong> из разных отраслей. Реальные практики, реальные результаты. Это даёт возможность не просто знакомить людей, но находить конкретные решения для каждого участника — на основе того, что уже работает у похожих бизнесов.
+    В основе — <strong>сотни кейсов по внедрению AI и автоматизации</strong> из разных отраслей. Реальные практики, реальные результаты. Это даёт возможность не просто знакомить людей, но находить конкретные решения для каждого участника — на основе того, что уже работает у похожих бизнесов.
   </p>
   <div class="graph-screenshot">
     <img src="obsidian.png" alt="Граф Obsidian">
@@ -408,7 +436,7 @@
     </div>
     <div class="step">
       <span class="step-num">03</span>
-      <div class="step-text">Когда находим неочевидную синергию</strong> — приходим к тебе с конкретным предложением: познакомить, свести, предложить решение.</div>
+      <div class="step-text">Когда находим <strong>неочевидную синергию</strong> — приходим к тебе с конкретным предложением: познакомить, свести, предложить решение.</div>
     </div>
   </div>
 </section>
@@ -417,16 +445,16 @@
 
 <!-- КЕЙСЫ -->
 <section>
-  <span class="section-label">03 — БазЀ знаний</span>
+  <span class="section-label">03 — База знаний</span>
   <h2>Сотни кейсов.<br>Реальные практики.</h2>
   <p>
-     через людьми мы собираем <strong>задокументированные кейсы� внедрения AI и автоматизации</strong> из рзны�e отраслей. Это позволяет находить, которые уже сработали у вого-то похожегона на тебя.
+    Параллельно с людьми мы собираем <strong>задокументированные кейсы внедрения AI и автоматизации</strong> из разных отраслей. Это позволяет находить решения, которые уже сработали у кого-то похожего на тебя.
   </p>
   <div class="cases-grid">
     <div class="case-card">
-      <div class="case-icon">⚙縏</div>
+      <div class="case-icon">⚙️</div>
       <div class="case-title">Автоматизация бизнес-процессов</div>
-      <p class="case-desc">Замена ручногоз труда, ускорение операций, снижение издержек</p>
+      <p class="case-desc">Замена ручного труда, ускорение операций, снижение издержек</p>
     </div>
     <div class="case-card">
       <div class="case-icon">📊</div>
@@ -435,7 +463,7 @@
     </div>
     <div class="case-card">
       <div class="case-icon">🤝</div>
-      <div class="case-title">Продажи и маркетинг»</div>
+      <div class="case-title">Продажи и маркетинг</div>
       <p class="case-desc">Генерация лидов, персонализация, автоворонки на базе AI</p>
     </div>
     <div class="case-card">
@@ -451,7 +479,7 @@
 <!-- ЦИТАТА -->
 <div class="quote-wrap">
   <div class="quote-block">
-    <p class="quote-text">«Самые ценные знакомства — это не те, которые ты ищешь. Это те, которые происходят, когда правильный ѡеловек видит правильный контекст.»</p>
+    <p class="quote-text">«Самые ценные знакомства — это не те, которые ты ищешь. Это те, которые происходят, когда правильный человек видит правильный контекст.»</p>
   </div>
 </div>
 
@@ -469,7 +497,7 @@
     <div class="question-block">
       <div class="q-num">вопрос 01</div>
       <div class="q-text">Как тебя зовут и чем ты занимаешься?</div>
-      <div class="q-hint">Не должность — суть. «Строю доходные дома», «Управляю деньгами инвесторов в недвижку», «Делаю заводы эффективнее»</div>
+      <div class="q-hint">Не должность — суть. «Строю доходный дома», «Управляю деньгами инвесторов в недвижку», «Демаю заводы эффективнее»</div>
       <textarea class="q-input" rows="3" placeholder="Имя + чем занимаешься своими словами…"></textarea>
     </div>
 
@@ -479,10 +507,7 @@
       <textarea class="q-input" rows="2" placeholder="Москва · недвижимость, инвестиции"></textarea>
     </div>
 
-    <span clasua>
-    </div>
-
-    <span class="form-group-header">Масштаа</span>
+    <span class="form-group-header">Масштаб</span>
 
     <div class="question-block">
       <div class="q-num">вопрос 03</div>
@@ -495,20 +520,20 @@
       <div class="q-num">вопрос 04</div>
       <div class="q-text">Что за последние 12 месяцев стало главным успехом — конкретно?</div>
       <div class="q-hint">Сделка, запуск, рост, выход — что угодно настоящее</div>
-      <textarea class="q-input" rows="3" placeholder="Закрыл сделку на X, запустили Y, вырос в 2x по…"></textarea>
+      <textarea class="q-input" rows="3" placeholder="Закрыл сделку на X, запустил Y, вырос в 2x по…"></textarea>
     </div>
 
     <span class="form-group-header">Что у тебя есть</span>
 
     <div class="question-block">
       <div class="q-num">вопрос 05</div>
-      <div class="q-text">Главный актив прямо сейчас — выбери �: 2–2:</div>
+      <div class="q-text">Твой главный актив прямо сейчас — выбери 1–2:</div>
       <div class="checkboxes">
         <label class="checkbox-label"><input type="checkbox"> Деньги для инвестиций</label>
         <label class="checkbox-label"><input type="checkbox"> Большая клиентская база / поток лидов</label>
         <label class="checkbox-label"><input type="checkbox"> Производственная или операционная экспертиза</label>
         <label class="checkbox-label"><input type="checkbox"> Команда с конкретными компетенциями</label>
-        <label class="checkbox-label"><input type="checkbox"> Доступ � объектам / ресурсам / лицензиян</label>
+        <label class="checkbox-label"><input type="checkbox"> Доступ к объектам / ресурсам / лицензиям</label>
         <label class="checkbox-label"><input type="checkbox"> Связи в отрасли или госструктурах</label>
         <label class="checkbox-label"><input type="checkbox"> Технология / продукт / IP</label>
       </div>
@@ -517,7 +542,7 @@
     <div class="question-block">
       <div class="q-num">вопрос 06</div>
       <div class="q-text">В чём твоя реальная сила — то, что сложно повторить?</div>
-      <textarea class="q-input" rows="3" placeholder="Что ты умеешьили имеешь, чего нет у большинства?"></textarea>
+      <textarea class="q-input" rows="3" placeholder="Что ты умеешь или имеешь, чего нет у большинства?"></textarea>
     </div>
 
     <span class="form-group-header">Что тебе нужно</span>
@@ -543,8 +568,8 @@
 
     <div class="question-block">
       <div class="q-num">вопрос 09</div>
-      <div class="q-text">Есть задача, за решение которой готов платить?</div>
-      <div class="q-hint">Если да — что за задача и порядок бюджета</div>
+      <div class="q-text">Есть задачу, за решение которой готов платить?</div>
+      <div class="q-hint">Если да — что за задачу, инача и порядок бюджета</div>
       <textarea class="q-input" rows="3" placeholder="Ищу подрядчика на X, бюджет ~Y / нет конкретного"></textarea>
     </div>
 
@@ -591,9 +616,9 @@ function init() {
   nodes = Array.from({length: count}, () => ({
     x: Math.random() * W,
     y: Math.random() * H,
-    vx: (Math.random() - 0.5) * 0.18,
-    vy: (Math.random() - 0.5) * 0.18,
-    r: Math.random() < 0.09 ? 4.5 : Math.random() < 0.25 ? 2.6 : 1.6,
+    vx: (Math.random() - 0.5) * 0.22,
+    vy: (Math.random() - 0.5) * 0.22,
+    r: Math.random() < 0.09 ? 5.5 : Math.random() < 0.25 ? 3.2 : 2.0,
     phase: Math.random() * Math.PI * 2
   }));
   edges = [];
@@ -611,10 +636,10 @@ function draw() {
   for (const [a, b] of edges) {
     const na = nodes[a], nb = nodes[b];
     const d = Math.hypot(na.x - nb.x, na.y - nb.y);
-    if (d > 320) continue;
+    if (d > 380) continue;
     ctx.beginPath();
-    ctx.strokeStyle = `rgba(140, 120, 255, ${(1 - d/320) * 0.3})`;
-    ctx.lineWidth = 0.7;
+    ctx.strokeStyle = `rgba(160, 140, 255, ${(1 - d/380) * 0.65})`;
+    ctx.lineWidth = 1.1;
     ctx.moveTo(na.x, na.y);
     ctx.lineTo(nb.x, nb.y);
     ctx.stroke();
@@ -623,19 +648,19 @@ function draw() {
     n.phase += 0.014;
     const glow = Math.sin(n.phase) * 0.4 + 0.6;
     if (n.r > 3.5) {
-      const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 8);
-      g.addColorStop(0, `rgba(155, 130, 255, ${glow * 0.4})`);
+      const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 10);
+      g.addColorStop(0, `rgba(180, 155, 255, ${glow * 0.75})`);
       g.addColorStop(1, 'transparent');
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r * 8, 0, Math.PI * 2);
+      ctx.arc(n.x, n.y, n.r * 10, 0, Math.PI * 2);
       ctx.fillStyle = g;
       ctx.fill();
     }
     ctx.beginPath();
     ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
     ctx.fillStyle = n.r > 3.5
-      ? `rgba(200, 185, 255, ${0.7 + glow * 0.3})`
-      : `rgba(130, 115, 250, ${0.4 + glow * 0.3})`;
+      ? `rgba(220, 205, 255, ${0.9 + glow * 0.1})`
+      : `rgba(170, 155, 255, ${0.65 + glow * 0.35})`;
     ctx.fill();
     n.x += n.vx; n.y += n.vy;
     if (n.x < 0 || n.x > W) n.vx *= -1;
