@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ГРАФ — коллективный разум</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0d0f;
+    color: #e8e8e8;
+    font-family: 'Georgia', serif;
+    overflow-x: hidden;
+  }
+
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  .hero, section, .quote-wrap, .form-section, footer {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+    background: rgba(13,13,15,0.55);
+  }
+
+  .label {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: 5px;
+    color: #9b8fff;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  h1 {
+    font-size: clamp(72px, 17vw, 140px);
+    font-weight: 400;
+    letter-spacing: -3px;
+    color: #ffffff;
+    line-height: 1;
+    margin-bottom: 36px;
+  }
+
+  .tagline {
+    font-size: clamp(17px, 2.5vw, 21px);
+    line-height: 1.8;
+    color: #bbb;
+    max-width: 520px;
+    margin: 0 auto 52px;
+  }
+
+  .tagline strong {
+    color: #f0f0f0;
+    font-style: italic;
+    font-weight: normal;
+  }
+
+  .scroll-hint {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #9b8fff;
+    text-transform: uppercase;
+    animation: blink 2.4s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid #252530;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 90px 36px;
+    background: rgba(13,13,15,0.72);
+  }
+
+  .section-label {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: 5px;
+    color: #9b8fff;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  h2 {
+    font-size: clamp(28px, 4.5vw, 42px);
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 1.3;
+    margin-bottom: 32px;
+  }
+
+  h2 em { color: #b0a4ff; font-style: normal; }
+
+  p {
+    font-size: clamp(16px, 2vw, 18px);
+    line-height: 1.9;
+    color: #aaa;
+    margin-bottom: 22px;
+  }
+  p:last-child { margin-bottom: 0; }
+  p strong { color: #e0e0e0; font-weight: normal; }
+
+  /* ── СКРИНШОТ ГРАФА ── */
+  .graph-screenshot {
+    margin-top: 52px;
+    border: 1px solid #2a2a40;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0a0a14;
+  }
+  .graph-screenshot img { width: 100%; display: block; }
+  .graph-caption {
+    padding: 14px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #4a4a70;
+    text-align: center;
+    text-transform: uppercase;
+    border-top: 1px solid #1e1e30;
+  }
+
+  /* ── КЕЙСЫ ── */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .case-card {
+    background: rgba(20,20,32,0.8);
+    border: 1px solid #252538;
+    border-radius: 8px;
+    padding: 24px 20px;
+    transition: border-color 0.2s;
+  }
+  .case-card:hover { border-color: #5a50b0; }
+  .case-icon { font-size: 24px; margin-bottom: 14px; }
+  .case-title { font-size: 16px; color: #e0e0e0; margin-bottom: 8px; line-height: 1.4; }
+  .case-desc { font-size: 14px; color: #666; line-height: 1.65; }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 36px; margin-top: 16px; }
+  .step { display: flex; gap: 28px; align-items: flex-start; }
+  .step-num {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #9b8fff;
+    letter-spacing: 1px;
+    padding-top: 3px;
+    min-width: 30px;
+    flex-shrink: 0;
+  }
+  .step-text { font-size: clamp(16px, 2vw, 18px); line-height: 1.8; color: #aaa; }
+  .step-text strong { color: #e0e0e0; font-weight: normal; }
+
+  /* ── ЦИТАТА ── */
+  .quote-wrap {
+    position: relative;
+    z-index: 1;
+    padding: 70px 36px;
+    background: rgba(13,13,15,0.72);
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .quote-block {
+    background: rgba(18,18,28,0.9);
+    border-left: 3px solid #7c6ff7;
+    border-radius: 0 8px 8px 0;
+    padding: 36px 44px;
+  }
+  .quote-text {
+    font-size: clamp(19px, 2.5vw, 24px);
+    line-height: 1.75;
+    color: #d0d0d0;
+    font-style: italic;
+    margin: 0;
+  }
+
+  /* ── ФОРМА ── */
+  .form-section {
+    background: rgba(10,10,20,0.82);
+    padding: 90px 36px 110px;
+    border-top: 1px solid #1e1e2e;
+  }
+  .form-inner { max-width: 680px; margin: 0 auto; }
+
+  .form-title {
+    font-size: clamp(30px, 4.5vw, 40px);
+    font-weight: 400;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .form-sub {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 60px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+  }
+
+  .form-group-header {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: #9b8fff;
+    text-transform: uppercase;
+    margin: 56px 0 28px;
+    padding-top: 24px;
+    border-top: 1px solid #1e1e2e;
+    display: block;
+  }
+  .form-group-header:first-of-type { margin-top: 0; border-top: none; padding-top: 0; }
+
+  .question-block { margin-bottom: 40px; }
+
+  .q-num {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #6a60c0;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .q-text {
+    font-size: clamp(18px, 2.4vw, 21px);
+    color: #f0f0f0;
+    margin-bottom: 10px;
+    line-height: 1.45;
+  }
+
+  .q-hint {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+    margin-bottom: 16px;
+    line-height: 1.65;
+  }
+
+  .q-input {
+    width: 100%;
+    background: rgba(20,20,32,0.9);
+    border: 1px solid #2e2e48;
+    border-radius: 7px;
+    color: #e0e0e0;
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    padding: 16px 18px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+    line-height: 1.65;
+  }
+  .q-input:focus { border-color: #7c6ff7; background: rgba(25,22,45,0.95); }
+  .q-input::placeholder { color: #3a3a58; font-style: italic; }
+
+  .checkboxes { display: flex; flex-direction: column; gap: 9px; }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #aaa;
+    padding: 14px 18px;
+    border: 1px solid #222230;
+    border-radius: 7px;
+    transition: all 0.15s;
+    line-height: 1.4;
+    background: rgba(18,18,28,0.6);
+  }
+  .checkbox-label:hover { border-color: #4a4870; color: #ddd; background: rgba(25,22,45,0.7); }
+
+  .checkbox-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 19px; height: 19px;
+    border: 1px solid #3a3a60;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .checkbox-label input[type="checkbox"]:checked { background: #7c6ff7; border-color: #7c6ff7; }
+  .checkbox-label input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .checkbox-label:has(input:checked) { border-color: #5a50b060; color: #e0e0e0; background: rgba(30,25,55,0.7); }
+
+  footer {
+    padding: 52px 32px;
+    text-align: center;
+    border-top: 1px solid #1a1a28;
+    background: rgba(10,10,16,0.9);
+  }
+  .footer-text {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #333;
+    letter-spacing: 4px;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    section { padding: 64px 20px; }
+    .quote-wrap { padding: 56px 20px; }
+    .quote-block { padding: 28px 24px; }
+    .form-section { padding: 64px 20px 90px; }
+    h1 { letter-spacing: -1px; }
+    .cases-grid { grid-template-columns: 1fr; gap: 12px; }
+    .step { gap: 18px; }
+    .q-input { font-size: 16px; }
+    .checkbox-label { font-size: 15px; padding: 13px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- HERO -->
+<section class="hero" style="max-width:none; padding:60px 24px; background:rgba(13,13,15,0.55);">
+  <div class="label">закрытая сеть · коллективный разум</div>
+  <h1>ГРАФ</h1>
+  <p class="tagline">
+    База знаний из <strong>людей�, кейсов и возможностейк</strong> —
+    связанных так, чтобы видеть то, чего не видно в обычном нетворкинге.
+  </p>
+  <div class="scroll-hint">↓ читать дальше</div>
+</section>
+
+<hr class="divider">
+
+<!-- ИДЕЯ -->
+<section>
+  <span class="section-label">01 — Идея</span>
+  <h2>ГРАФ — это не список контактов.<br>Это <em>коллективный разум</em>.</h2>
+  <p>
+    Мы собираем профили людей из разных сфер — <strong>инвесторов, владельцев бизнеса, топ-менеджеров, экспертов</strong> — и связываем их через ресурсы, запросыи �цAли.
+  </p>
+  <p>
+     через время граф начинает показывать <strong>неочевидные связи</strong>: кто кому нужен, где есть незакрытая потребность, какая синергия возможна между людьми, которые никогда не встречались.
+  </p>
+  <p>
+    В основе — <strong>сотникейсы по внедрению AI и автоматизации</strong> из разных отраслей. Реальные практики, реальные результаты. Это даёт возможность не просто знакомить людей, но находить конкретные решения для каждого участника — на основе того, что уже работает у похожих бизнесов.
+  </p>
+  <div class="graph-screenshot">
+    <img src="obsidian.png" alt="Граф Obsidian">
+    <div class="graph-caption">реальный граф obsidian · люди, компании, связи</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- КАК РАБОТАЕТ -->
+<section>
+  <span class="section-label">02 — Как это работает</span>
+  <h2>Три шага.</h2>
+  <div class="steps">
+    <div class="step">
+      <span class="step-num">01</span>
+      <div class="step-text">Ты заполняешь анкету — <strong>7–10 минут</strong>. Рассказываешь, чем занимаешься, что у тебя есть и что ищешь прямо сейчас.</div>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <div class="step-text">Мы добавляем тебя в граф. Твой профиль связывается с другими участниками по пересечениям — <strong>ниши, ресурсы, запросы, цели</strong>. Плюс перекрёстная аналитика с кейсами по AI.</div>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <div class="step-text">Когда находим неочевидную синергию</strong> — приходим к тебе с конкретным предложением: познакомить, свести, предложить решение.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- КЕЙСЫ -->
+<section>
+  <span class="section-label">03 — БазЀ знаний</span>
+  <h2>Сотни кейсов.<br>Реальные практики.</h2>
+  <p>
+     через людьми мы собираем <strong>задокументированные кейсы� внедрения AI и автоматизации</strong> из рзны�e отраслей. Это позволяет находить, которые уже сработали у вого-то похожегона на тебя.
+  </p>
+  <div class="cases-grid">
+    <div class="case-card">
+      <div class="case-icon">⚙縏</div>
+      <div class="case-title">Автоматизация бизнес-процессов</div>
+      <p class="case-desc">Замена ручногоз труда, ускорение операций, снижение издержек</p>
+    </div>
+    <div class="case-card">
+      <div class="case-icon">📊</div>
+      <div class="case-title">AI-аналитика и решения</div>
+      <p class="case-desc">Как компании используют данные и нейросети для роста</p>
+    </div>
+    <div class="case-card">
+      <div class="case-icon">🤝</div>
+      <div class="case-title">Продажи и маркетинг»</div>
+      <p class="case-desc">Генерация лидов, персонализация, автоворонки на базе AI</p>
+    </div>
+    <div class="case-card">
+      <div class="case-icon">🏗️</div>
+      <div class="case-title">Отраслевые внедрения</div>
+      <p class="case-desc">Недвижимость, производство, ритейл, медицина, логистика</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ЦИТАТА -->
+<div class="quote-wrap">
+  <div class="quote-block">
+    <p class="quote-text">«Самые ценные знакомства — это не те, которые ты ищешь. Это те, которые происходят, когда правильный ѡеловек видит правильный контекст.»</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- АНКЕТА -->
+<div class="form-section">
+  <div class="form-inner">
+    <span class="section-label" style="margin-bottom:18px; display:block;">04 — Анкета</span>
+    <div class="form-title">Расскажи о себе</div>
+    <div class="form-sub">≈ 7–10 минут · закрытый доступ · только для нас</div>
+
+    <span class="form-group-header">Кто ты</span>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 01</div>
+      <div class="q-text">Как тебя зовут и чем ты занимаешься?</div>
+      <div class="q-hint">Не должность — суть. «Строю доходные дома», «Управляю деньгами инвесторов в недвижку», «Делаю заводы эффективнее»</div>
+      <textarea class="q-input" rows="3" placeholder="Имя + чем занимаешься своими словами…"></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 02</div>
+      <div class="q-text">Город и отрасль</div>
+      <textarea class="q-input" rows="2" placeholder="Москва · недвижимость, инвестиции"></textarea>
+    </div>
+
+    <span clasua>
+    </div>
+
+    <span class="form-group-header">Масштаа</span>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 03</div>
+      <div class="q-text">Оборот или объём сделок в год — хотя бы порядок цифр</div>
+      <div class="q-hint">до 10M ₽ / 10–100M ₽ / 100M–1B ₽ / больше миллиарда</div>
+      <textarea class="q-input" rows="2" placeholder="~50M ₽ в год"></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 04</div>
+      <div class="q-text">Что за последние 12 месяцев стало главным успехом — конкретно?</div>
+      <div class="q-hint">Сделка, запуск, рост, выход — что угодно настоящее</div>
+      <textarea class="q-input" rows="3" placeholder="Закрыл сделку на X, запустили Y, вырос в 2x по…"></textarea>
+    </div>
+
+    <span class="form-group-header">Что у тебя есть</span>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 05</div>
+      <div class="q-text">Главный актив прямо сейчас — выбери �: 2–2:</div>
+      <div class="checkboxes">
+        <label class="checkbox-label"><input type="checkbox"> Деньги для инвестиций</label>
+        <label class="checkbox-label"><input type="checkbox"> Большая клиентская база / поток лидов</label>
+        <label class="checkbox-label"><input type="checkbox"> Производственная или операционная экспертиза</label>
+        <label class="checkbox-label"><input type="checkbox"> Команда с конкретными компетенциями</label>
+        <label class="checkbox-label"><input type="checkbox"> Доступ � объектам / ресурсам / лицензиян</label>
+        <label class="checkbox-label"><input type="checkbox"> Связи в отрасли или госструктурах</label>
+        <label class="checkbox-label"><input type="checkbox"> Технология / продукт / IP</label>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 06</div>
+      <div class="q-text">В чём твоя реальная сила — то, что сложно повторить?</div>
+      <textarea class="q-input" rows="3" placeholder="Что ты умеешьили имеешь, чего нет у большинства?"></textarea>
+    </div>
+
+    <span class="form-group-header">Что тебе нужно</span>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 07</div>
+      <div class="q-text">Что ты ищешь прямо сейчас?</div>
+      <div class="checkboxes">
+        <label class="checkbox-label"><input type="checkbox"> Клиенты / заказы</label>
+        <label class="checkbox-label"><input type="checkbox"> Партнёр для совместного проекта</label>
+        <label class="checkbox-label"><input type="checkbox"> Инвестиции</label>
+        <label class="checkbox-label"><input type="checkbox"> Подрядчики / исполнители</label>
+        <label class="checkbox-label"><input type="checkbox"> Экспертиза, которой у меня нет</label>
+        <label class="checkbox-label"><input type="checkbox"> Команда / сотрудники</label>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 08</div>
+      <div class="q-text">Главная задача или боль — что реально мешает расти?</div>
+      <textarea class="q-input" rows="4" placeholder="То, из-за отсутствия чего тормозишь прямо сейчас…"></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 09</div>
+      <div class="q-text">Есть задача, за решение которой готов платить?</div>
+      <div class="q-hint">Если да — что за задача и порядок бюджета</div>
+      <textarea class="q-input" rows="3" placeholder="Ищу подрядчика на X, бюджет ~Y / нет конкретного"></textarea>
+    </div>
+
+    <span class="form-group-header">Связи</span>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 10</div>
+      <div class="q-text">Опиши человека, знакомство с которым изменило бы твой бизнес</div>
+      <div class="q-hint">Кто он, чем занимается, почему именно он</div>
+      <textarea class="q-input" rows="3" placeholder="Хочу познакомиться с…"></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 11</div>
+      <div class="q-text">Telegram и удобный способ связи</div>
+      <textarea class="q-input" rows="2" placeholder="@username · предпочитаю Telegram / WhatsApp / Email"></textarea>
+    </div>
+
+    <div class="question-block">
+      <div class="q-num">вопрос 12</div>
+      <div class="q-text">Что важное я не спросил?</div>
+      <textarea class="q-input" rows="3" placeholder="Необязательно, но может быть важно…"></textarea>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-text">ГРАФ · коллективный разум · 2025</div>
+</footer>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, nodes, edges;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function init() {
+  const count = window.innerWidth < 640 ? 38 : 65;
+  nodes = Array.from({length: count}, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.18,
+    vy: (Math.random() - 0.5) * 0.18,
+    r: Math.random() < 0.09 ? 4.5 : Math.random() < 0.25 ? 2.6 : 1.6,
+    phase: Math.random() * Math.PI * 2
+  }));
+  edges = [];
+  for (let i = 0; i < count; i++) {
+    const n = Math.floor(Math.random() * 3) + 1;
+    for (let c = 0; c < n; c++) {
+      const j = Math.floor(Math.random() * count);
+      if (j !== i) edges.push([i, j]);
+    }
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  for (const [a, b] of edges) {
+    const na = nodes[a], nb = nodes[b];
+    const d = Math.hypot(na.x - nb.x, na.y - nb.y);
+    if (d > 320) continue;
+    ctx.beginPath();
+    ctx.strokeStyle = `rgba(140, 120, 255, ${(1 - d/320) * 0.3})`;
+    ctx.lineWidth = 0.7;
+    ctx.moveTo(na.x, na.y);
+    ctx.lineTo(nb.x, nb.y);
+    ctx.stroke();
+  }
+  for (const n of nodes) {
+    n.phase += 0.014;
+    const glow = Math.sin(n.phase) * 0.4 + 0.6;
+    if (n.r > 3.5) {
+      const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 8);
+      g.addColorStop(0, `rgba(155, 130, 255, ${glow * 0.4})`);
+      g.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r * 8, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = n.r > 3.5
+      ? `rgba(200, 185, 255, ${0.7 + glow * 0.3})`
+      : `rgba(130, 115, 250, ${0.4 + glow * 0.3})`;
+    ctx.fill();
+    n.x += n.vx; n.y += n.vy;
+    if (n.x < 0 || n.x > W) n.vx *= -1;
+    if (n.y < 0 || n.y > H) n.vy *= -1;
+  }
+  requestAnimationFrame(draw);
+}
+
+window.addEventListener('resize', () => { resize(); init(); });
+resize(); init(); draw();
+</script>
+</body>
+</html>
